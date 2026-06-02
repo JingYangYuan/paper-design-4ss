@@ -176,16 +176,11 @@ paper-design-4ss/
 │   └── theory-frameworks-political-science.md
 └── references/                      # 方法论参考
     ├── storm-patterns.md            # 跨学科评估协议 + 嫁接策略库
-    ├── idea-essence.md              # scholar-idea RQ公式库
-    ├── brainstorm-essence.md        # scholar-brainstorm 变量体系
-    └── design-essence.md            # scholar-design 设计决策树
+    ├── idea-essence.md              # RQ 公式库与生成路径
+    ├── brainstorm-essence.md        # 跨学科头脑风暴变量体系
+    └── design-essence.md            # 研究设计决策树
 ```
 
-### 3.6 下游衔接
+### 3.6 输出与后续
 
-本技能输出理论锚点和 Top 10 RQs，下游可由以下插件承接:
-
-- **`scholar-idea`**: RQ 公式化 + 领域模式匹配
-- **`scholar-brainstorm`**: 数据驱动的经验信号验证
-- **`scholar-design`**: 完整研究设计蓝图 (定量/质性/混合/计算)
-- **`academic-paper`**: 论文写作 (从设计蓝图到完整稿件)
+本技能输出理论锚点、Top 10 RQs 和研究设计蓝图，可直接作为论文选题和研究设计的决策依据。

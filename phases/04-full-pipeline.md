@@ -151,7 +151,7 @@ Phase 01: FRAME ────→ Phase 02: STORM ────→ Phase 03: DESIGN
 |------|---------|---------|
 | FRAME | 5-10 min | Frame 文件 (单学科读取) |
 | STORM | 15-25 min | Frame 文件 (多学科) + 5 个 Agent 并行 |
-| DESIGN | 10-15 min | scholar-design 或自主设计 |
+| DESIGN | 10-15 min | 自主设计 |
 | 合并 | 2-3 min | 报告拼接 + 交叉引用一致性 |
 | **总计** | **~30-50 min** | **完整论文方案** |
 

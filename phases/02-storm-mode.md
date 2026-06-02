@@ -390,7 +390,7 @@ Agent 5 (魔鬼代言人): "找出以下 15-20 个 RQ 的致命缺陷..."
 
 ## 8. 下一步建议
 - 进入 DESIGN 模式将选定 RQ 转化为研究设计蓝图
-- 或使用 scholar-idea / scholar-brainstorm 进行进一步打磨
+- 或参考 references/ 中的方法论资料进行进一步打磨
 ```
 
 ### Step 8: 日志记录
