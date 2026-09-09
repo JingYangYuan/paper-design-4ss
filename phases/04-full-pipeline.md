@@ -1,8 +1,10 @@
 # Phase 04: FULL 模式 — 端到端全流程
 
+> **取向覆盖条款（优先于本文件其余默认项）**：FULL 开始前确认研究取向，混合研究另确认主路径、次路径和互证关系；该选择贯穿 FRAME → STORM → DESIGN。各阶段顾问按风险调度，不沿用原文固定三/五顾问。Stage Gate 1–3 按已选取向验收：理论、规范和阐释路径不要求变量、功效或回归。`full-report` 复制 `research_orientation` 与 `analysis_required`；只有后者为 `true` 才交接 analysis，否则交接 lit → outline → write。
+
 ## 顾问派发闸门
 
-FULL 模式必须按 `master/agent-orchestration.md` 创建 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/agent-brief.md`，并在 FRAME、STORM、DESIGN 三段分别更新 `agent-synthesis-design-[YYYY-MM-DD].md`。STORM 保留五顾问并行评估；FRAME 至少派发 theory+field+critical-review，DESIGN 至少派发 method+journal-fit+critical-review，不能并行时记录 `sequential-review`。
+FULL 模式按 `master/agent-orchestration.md` 在存在实质风险时创建 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/agent-brief.md`，并在需要复核的 FRAME、STORM、DESIGN 段更新 `agent-synthesis-design-[YYYY-MM-DD].md`。各段按当前风险选择角色；不能并行时记录 `sequential-review`，轻量任务记录 `agent-skip`。
 
 ## 触发条件
 

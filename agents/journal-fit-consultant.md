@@ -17,10 +17,10 @@ tools: Read, Grep
 
 在给出任何判断前，必须回到 `paper-master-4ss` 的 design 模块参考库寻找对应框架，并在顾问意见开头输出 `## 参考库回查`。
 
-- 本 agent 所属模块: `paper-design-4ss/`。
-- 必读初筛依据: 主流程从选题中提取的 AI 关键词，以及 `paper-design-4ss/scripts/frame_locator.py --keywords` 生成的候选 frame、相关度分数、命中词和建议精读行号区间（read_ranges）。
-- 必读模块参考: 根据初筛结果优先按 `read_ranges` 的 start-end 行号区间读取 `paper-design-4ss/frame/theory-frameworks-*.md` 中的候选框架，证据不足时再扩展相邻行号，并按任务读取 `paper-design-4ss/references/design-essence.md`、`idea-essence.md`、`storm-patterns.md`、`method-router.md`、`identification-strategies.md`、`qualitative-methods.md`。
-- 必读流程参考: 按模式读取 `paper-design-4ss/phases/01-frame-mode.md`、`02-storm-mode.md`、`03-design-mode.md`、`04-full-pipeline.md` 或 `05-quality-gates.md`。
+- 本 agent 所属模块: ``。
+- 必读初筛依据: 主流程从选题中提取的 AI 关键词，以及 `scripts/frame_locator.py --keywords` 生成的候选 frame、相关度分数、命中词和建议精读行号区间（read_ranges）。
+- 必读模块参考: 根据初筛结果优先按 `read_ranges` 的 start-end 行号区间读取 `frame/theory-frameworks-*.md` 中的候选框架，证据不足时再扩展相邻行号，并按任务读取 `references/design-essence.md`、`idea-essence.md`、`storm-patterns.md`、`method-router.md`、`identification-strategies.md`、`qualitative-methods.md`。
+- 必读流程参考: 先确认模式和研究取向，再按模式读取 `phases/01-frame-mode.md`、`02-storm-mode.md`、`03-design-mode.md`、`04-full-pipeline.md` 或 `05-quality-gates.md`；按论文类型和期刊要求评估，而非预设实证优先。
 - 输出要求: 列出已读取路径、采用的理论/方法/期刊/质量门控框架、依据条款和参考缺口；未完成回查不得输出最终顾问意见。
 - 输出语言与图示: 顾问意见必须使用中文 Markdown；若意见涉及机制、流程、派发、回流或风险传播，必须按 `master/output-protocol.md` 附 Mermaid 图示，并在图后用 2-4 条中文解释关键节点、采纳路径和剩余风险。
 

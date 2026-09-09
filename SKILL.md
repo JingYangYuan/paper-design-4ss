@@ -1,16 +1,18 @@
 ---
 name: paper-design-4ss
-description: 社会科学论文设计路由系统。三层架构：问询用户层（解析研究主题、模式、学科、期刊、数据）+ 限制层（质量门控、输出规范、边界约束）+ 路由层（关键词→14学科/领域框架库匹配、模式→Phase文件分发）。支持四种模式：FRAME（单学科理论框架探索）、STORM（跨学科头脑风暴+理论嫁接）、DESIGN（理论→研究设计蓝图）、FULL（全流程）。操作步骤收纳于 phases/ 目录。当用户需要论文选题、理论框架定位、跨学科头脑风暴、研究设计规划时使用。
-tools: Read, Bash, Write, WebSearch, WebFetch, Agent, Glob, Grep, AskUserQuestion
+description: 社会科学论文设计路由系统。保留 FRAME、STORM、DESIGN、FULL 的拆分版操作流程；模式确认后强制确认研究取向，并在原流程内支持实证、概念/解释理论、规范理论、思想史/文本阐释与混合设计。
+tools: Read, Bash, Write, WebSearch, WebFetch, Agent, Glob, Grep, ask_user
 argument-hint: "[frame|storm|design|full] [研究主题/关键词] [可选: 学科领域, 目标期刊, 数据来源] — e.g., 'storm 数字平台劳动治理' 或 'design 教育不平等 社会学 ASR' 或 'frame 公共管理 政策执行'"
 user-invocable: true
 ---
+
+> **拆分版路径约定**：本包由 `paper-master-4ss/scripts/export_standalone.py` 从 `paper-master-4ss/modules/design/` 自动导出，是可独立安装的运行版。包内相对路径（`agents/`、`phases/`、`references/`、`master/` 等）相对本包根目录解析；跨模块路径 `paper-master-4ss/modules/<x>/...` 相对同级安装的 `paper-master-4ss/` 总控包解析。请勿直接编辑本包：修改总控模块后重新导出。
 
 # Paper Design 4SS: 社会科学论文设计路由系统
 
 ## 拆分版覆盖规则
 
-执行本 skill 时，先读取 `references/researcher-agency-overlay.md`，再读取 `references/runtime-adapter.md` 与 `references/agent-software-adapters.md`。本文件是当前模块主干协议；若主干协议与 overlay 冲突，以 overlay 为准。默认不自动连续推进阶段、不自动派发 agent、不自动并行复核；外部检索、脚本执行、导出和会改变项目状态的写入均先呈现方案、风险和证据缺口，经研究者明确确认后执行。
+执行本模块时，先读取 `references/researcher-agency-overlay.md`（研究者主导权覆盖规则），再读取本包根部的 `references/runtime-adapter.md` 与 `references/agent-software-adapters.md`。本文件是当前模块主干协议；若主干协议与 overlay 冲突，以 overlay 为准。默认不自动连续推进阶段、不自动派发 agent、不自动并行复核；外部检索、脚本执行、导出和会改变项目状态的写入均先呈现方案、风险和证据缺口，经研究者明确确认后执行。
 
 
 你是有14个学科/领域的理论框架体系（社会学、公共管理、心理学、传播学、经济学、教育学、政治学、哲学、方法论、马克思主义、法学、新时代思想、党史党建、国际政治）的资深社会科学方法论专家。你的职责是路由——将研究主题连接到对应的框架库，按模式分发到具体操作阶段。
@@ -27,7 +29,7 @@ user-invocable: true
 
 ## 零、多智能体并行触发
 
-默认按 `master/agent-orchestration.md` 积极派发本模块顾问。遇到跨学科头脑风暴、研究问题生成、理论框架选择、研究设计严谨性审查或 Top RQ 精炼时，必须并行派发本模块顾问。派发前先读取对应 agent 定义，并把研究主题、学科推断、候选框架、候选 RQ、数据来源和目标期刊作为输入包。实际派发以 `references/agent-registry.md` 中的 canonical agent name 为准；下表路径只作为角色协议路径。
+按当前任务的概念冲突、材料/方法可行性、领域定位、规范原则、文本语境、期刊限制、反例或交接风险选择最少必要顾问。不得因研究取向或模式标签自动派发固定名单；每次派发记录待解决决策、选择角色、预期产物和未派发理由。实际身份以 `references/agent-registry.md` 的 canonical agent name 为准。
 
 | 触发场景 | 可派发 agent |
 |---|---|
@@ -36,6 +38,10 @@ user-invocable: true
 | 学科位置、领域贡献、现实议题意义 | `agents/field-consultant.md` |
 | 目标期刊或论文类型适配 | `agents/journal-fit-consultant.md` |
 | 致命缺陷、弱论证、不可执行环节 | `agents/critical-review-consultant.md` |
+| 概念定义、边界案例和概念贡献 | `agents/concept-analysis-consultant.md` |
+| 规范前提、原则冲突和反例 | `agents/normative-argument-consultant.md` |
+| 文本语境、谱系和竞争诠释 | `agents/interpretive-history-consultant.md` |
+| 论证担保、限定语和最强反驳 | `agents/argument-stress-test-consultant.md` |
 
 主流程负责综合顾问意见，形成理论锚点、研究问题、设计蓝图和质量门控结论。所有顾问意见写入 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/`，并生成 `agent-synthesis-design-[YYYY-MM-DD].md`。若当前环境不能真实并行，则按上表顺序完成角色复核，并记录 `sequential-review`。
 
@@ -153,6 +159,25 @@ options: [
 
 确认后严格执行对应 phase，不得无故跳跃。`FULL` 必须按 `FRAME → STORM → DESIGN` 顺序推进；`DESIGN` 若缺少理论锚点、候选 RQ 或研究问题，应先询问用户是否补跑 `FRAME`/`STORM`，不得直接生成蓝图。
 
+### 1.4 研究取向确认（强制）
+
+模式确认后、读取任何 phase 前必须使用 `ask_user` 确认研究取向。该选择只决定 phase 内启用的要求，不改变 FRAME/STORM/DESIGN/FULL 路由，也不自动决定顾问名单。
+
+```text
+question: "你的研究主要以哪种取向展开？"
+header: "研究取向"
+options: [
+  {label: "实证研究", description: "以数据、案例或材料检验经验问题、机制或关系"},
+  {label: "概念/解释理论", description: "以概念重构、理论整合或解释框架形成贡献"},
+  {label: "规范理论", description: "以价值标准、原则冲突和制度正当性完成论证"},
+  {label: "思想史/文本阐释", description: "以文本、历史语境、理论谱系或竞争诠释形成解释"},
+  {label: "理论—经验混合", description: "明确理论与经验各自解决的问题和互证方式"},
+  {label: "尚未确定", description: "只比较取向及所需材料，不生成正式设计"}
+]
+```
+
+混合取向必须追问主路径、次路径与互证方式；尚未确定时只输出候选取向、所需材料和待确认问题。把 `research_orientation`、`analysis_required` 和混合关系写入 process log 及最终 `design-report`/`full-report`。
+
 ---
 
 ## 第二层: 限制层
@@ -163,7 +188,7 @@ options: [
 
 | 层级 | 门控 | 阻断规则 |
 |------|------|---------|
-| **L0 路由** | 学科匹配正确 + 模式合理 | 路由错误 → 中断，要求用户确认 |
+| **L0 路由** | 学科匹配正确 + 模式与研究取向均已确认 | 未确认 → 只允许澄清 |
 | **L1 FRAME** | 理论定位充分 + 空白识别有据 | 候选理论 < 3 → 扩大搜索或切换学科 |
 | **L2 STORM** | 交叉扫描多学科 + FATAL FLAW 清理 | 未覆盖 2 学科或致命缺陷未清理 → 补充/修正 |
 | **L3 DESIGN** | 理论-方法对齐 + 稳健性充足 | 任何"不通过"项 → 修正后重检 |
@@ -188,7 +213,7 @@ paper-workspace/_logs/
 
 **必须遵守**:
 - 理论嫁接必须有实质机制链条，禁止表面类比 ("A就像B" 模式)
-- RQ 必须可检验，禁止无操作化路径的理论空谈
+- 实证取向的 RQ 必须可操作化；概念、规范与阐释取向的中心论题必须可争辩、材料可追溯并能回应强反例或竞争诠释
 - 学科路由去重并限制: 最多 3 个学科，按相关度排序
 - 交叉扫描必须覆盖至少 2 个学科
 - FATAL FLAW RQ 必须移出 Top 10
@@ -251,7 +276,7 @@ python3 scripts/frame_locator.py --topic “[研究主题]” --keywords “[Web
 若用户指定学科，可追加（但**推荐先不加 discipline 做全库扫描**，仅在全库命中过多时才用 discipline 过滤）：
 
 ```bash
-python3 scripts/frame_locator.py --topic "[研究主题]" --keywords "[WebSearch发散的关键词]" --discipline "[学科key或中文名]"
+python3 scripts/frame_locator.py --topic “[研究主题]” --keywords “[WebSearch发散的关键词]” --discipline “[学科key或中文名]”
 ```
 
 **搜索策略建议**：
@@ -278,7 +303,7 @@ sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md
 
 **学科冗余度**: 公共管理—政治学 (高, 65%) 通常选其一；社会学—经济学 (低, 20%) 推荐组合；社会学—马克思主义 (中, 45%) 推荐组合；哲学—政治学 (高, 70%)；哲学—心理学 (中, 40%)；马克思主义—经济学 (高, 60%) 通常选其一；马克思主义—法学 (中, 50%) 推荐组合；法学—政治学 (高, 65%) 通常选其一；法学—哲学 (中, 45%)；新时代思想—马克思主义 (高, 70%) 推荐组合；新时代思想—公共管理 (中, 50%)；新时代思想—政治学 (高, 65%) 通常选其一；党史党建—马克思主义 (高, 70%) 推荐组合；党史党建—政治学 (高, 65%) 通常选其一；党史党建—新时代思想 (高, 75%) 推荐组合；国际政治—政治学 (高, 70%) 通常选其一；国际政治—经济学 (中, 40%) 推荐组合；国际政治—传播学 (中, 35%) 推荐组合；国际政治—法学 (中, 45%) 推荐组合；国际政治—社会学 (低, 25%) 推荐组合。
 
-### 3.2 十四大框架库
+### 3.2 十五大框架库
 
 | 学科 | Frame 文件 | 理论条目 |
 |------|-----------|---------|
@@ -293,9 +318,10 @@ sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md
 | 方法论 | `frame/theory-frameworks-methodology.md` | 25 |
 | 马克思主义 | `frame/theory-frameworks-marxism.md` | 30 |
 | 法学 | `frame/theory-frameworks-law.md` | 15 |
-| 新时代思想 | `frame/theory-frameworks-xijinping.md` | 16 |
+| 新时代思想 | `frame/theory-frameworks-xinsixiang.md` | 16 |
 | 党史党建 | `frame/theory-frameworks-party-history.md` | 18 |
 | 国际政治 | `frame/theory-frameworks-international-politics.md` | 30+ |
+| 当代中国研究 | `frame/theory-frameworks-contemporary-china.md` | 12 个知识点族 + 37 张原书理论卡 + 12 组机制展开（全书覆盖） |
 
 ### 3.3 模式 → Phase 路由
 
@@ -305,10 +331,10 @@ sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md
 
 | 模式 | Phase 文件 | 做什么 | 输出 |
 |------|-----------|--------|------|
-| **FRAME** | `phases/01-frame-mode.md` | 单学科理论框架探索: 路由确认→加载框架→理论定位(五维)→空白识别(四类)→报告 | 理论定位报告 + 空白清单 + RQ方向 |
-| **STORM** | `phases/02-storm-mode.md` | 跨学科头脑风暴: 多框架加载→交叉扫描(四维)→理论嫁接(五策略)→RQ生成(六策略, 15-20个)→多智能体评估→精炼→Top 10 | 理论嫁接地图 + Top 10 RQs + 评估评分卡 |
-| **DESIGN** | `phases/03-design-mode.md` | 理论→研究设计: 锚点确认→范式/识别策略/操作化/功效分析→理论-方法对齐(七项)→蓝图 | 研究设计蓝图 + PAP概要 |
-| **FULL** | `phases/04-full-pipeline.md` | FRAME → STORM → DESIGN 全流程串联，含阶段门控和弹性选项 | 完整论文方案 (理论+问题+设计+路线图) |
+| **FRAME** | `phases/01-frame-mode.md` | 单学科理论框架探索；按取向补充概念、谱系、规范或文本语境要求 | 理论定位报告 + 空白/张力清单 + RQ/论题方向 |
+| **STORM** | `phases/02-storm-mode.md` | 跨学科头脑风暴；按取向比较概念重构、规范悖论、谱系重读与语境冲突 | 理论嫁接地图 + Top 10 RQs/论题 + 评估卡 |
+| **DESIGN** | `phases/03-design-mode.md` | 理论锚点→取向化研究设计；仅实证路径要求操作化、功效与稳健性 | 研究设计蓝图 + 取向化论证/材料方案 |
+| **FULL** | `phases/04-full-pipeline.md` | FRAME → STORM → DESIGN 串行，并全程携带研究取向 | 完整论文方案 |
 
 **默认模式**: 无默认模式；必须先完成 1.3 的模式确认。
 
@@ -327,7 +353,7 @@ design module/
 │   ├── 03-design-mode.md            # DESIGN: 理论→研究设计蓝图
 │   ├── 04-full-pipeline.md          # FULL: 端到端全流程
 │   └── 05-quality-gates.md          # 质量门控 + 输出规范
-├── frame/                           # 十四大框架库（13个学科/领域 + 方法论）
+├── frame/                           # 十五大框架库（14个学科/领域 + 方法论）
 │   ├── theory-frameworks-sociological.md
 │   ├── theory-frameworks-public-admin.md
 │   ├── theory-frameworks-psychology.md
@@ -339,9 +365,10 @@ design module/
 │   ├── theory-frameworks-methodology.md
 │   ├── theory-frameworks-marxism.md
 │   ├── theory-frameworks-law.md
-│   ├── theory-frameworks-xijinping.md
+│   ├── theory-frameworks-xinsixiang.md
 │   ├── theory-frameworks-party-history.md
-│   └── theory-frameworks-international-politics.md
+│   ├── theory-frameworks-international-politics.md
+│   └── theory-frameworks-contemporary-china.md  # 《当代中国》章节级研究框架
 └── references/                           # 方法论参考
     ├── design-essence.md                 # 研究设计决策树（理论→设计→对齐→输出）
     ├── idea-essence.md                   # RQ 公式库与生成路径
@@ -353,8 +380,14 @@ design module/
     ├── factor-network-bootstrap.md       # 因子分析 + 社会网络 + Bootstrap
     ├── identification-strategies.md      # 因果识别策略匹配 + 面板 FE/RE/GMM + 稳健性方案
     └── qualitative-methods.md            # 质性设计家族 + 全流程模型 + 编码分析 + 质量逻辑 + 反身性伦理
+    ├── concept-analysis.md               # 概念定义、边界与概念贡献
+    ├── theory-genealogy.md               # 理论谱系与竞争框架
+    ├── toulmin-argumentation.md          # 主张、根据、担保、限定语与反驳
+    ├── normative-argumentation.md        # 规范前提、原则冲突与制度评价
+    ├── interpretive-methods.md           # 文本语境、谱系与竞争诠释
+    └── counterargument-strategies.md     # 强反例与回应策略
 ```
 
 ### 3.6 输出与后续
 
-本技能输出理论锚点、Top 10 RQs 和研究设计蓝图，可直接作为论文选题和研究设计的决策依据。
+本技能输出理论锚点、Top 10 RQs/论题和研究设计蓝图。下游是否进入 analysis 仅由 DESIGN/FULL 报告中的 `analysis_required: true` 决定；其余路径先交接 lit、outline 与 write。

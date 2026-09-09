@@ -1,6 +1,6 @@
 # ask_user 示例模块规范
 
-本文档定义 `paper-master-4ss` 内所有用户提问、确认和阻断门槛的示例写法。`ask_user` 是三宿主通用能力名；Claude Code 可映射为 AskUserQuestion，OpenCode/Codex 映射为各自的提问能力或直接提问。各模块可以保留局部业务选项，但字段结构应统一为 `question`、`header`、`options`。
+本文档定义 `paper-master-4ss` 内所有用户提问、确认和阻断门槛的示例写法。`ask_user` 是四宿主通用能力名；Claude Code 与 ZCode 可映射为 AskUserQuestion，OpenCode/Codex 映射为各自的提问能力或直接提问。各模块可以保留局部业务选项，但字段结构应统一为 `question`、`header`、`options`。
 
 ## 一、标准字段
 
@@ -64,7 +64,7 @@ options: [
 
 ## 五、选择固化规则
 
-以下选择一旦稳定，应按 `project_memory` 写入当前宿主项目规则；Claude Code 可写入项目级 `CLAUDE.md` 的 paper-master 标记块，OpenCode/Codex 缺少宿主规则文件时写入 `paper-workspace/_index/project-rules.md`：
+以下选择一旦稳定，应按 `project_memory` 写入当前宿主项目规则；Claude Code 可写入项目级 `CLAUDE.md` 的 paper-master 标记块，ZCode 写入工作区 `AGENTS.md` 的 paper-master 标记块，OpenCode/Codex 缺少宿主规则文件时写入 `paper-workspace/_index/project-rules.md`：
 
 - 模块模式、研究范式、学理化风格、输出路径等长期偏好。
 - Team 五项选择。

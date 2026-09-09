@@ -1,6 +1,6 @@
 # Team Routing Protocol
 
-本文档定义 `paper-master-4ss` 在 Claude Code Agent Teams 中的显式触发、用户确认、focal canonical agent 选择、同一 subagent 多席位化和辩论式 teammate 路由规则。Agent Teams/teammate 是 Claude Code 专属高级并行形态；OpenCode/Codex 调用本 skill 时，按 `references/agent-software-adapters.md` 回退到普通顾问派发或 `sequential-review`。
+本文档定义 `paper-master-4ss` 在 Claude Code Agent Teams 中的显式触发、用户确认、focal canonical agent 选择、同一 subagent 多席位化和辩论式 teammate 路由规则。Agent Teams/teammate 是 Claude Code 专属高级并行形态；ZCode 调用本 skill 时按 `references/agent-software-adapters.md` 回退为 Agent 工具并行 subagent 派发，OpenCode/Codex 回退到普通顾问派发或 `sequential-review`。
 
 ## 1. 触发边界
 
@@ -31,7 +31,7 @@ Team 与普通 subagent 派发的边界必须保持清楚：普通 orchestration
 7. `master/output-protocol.md`。
 8. `references/agent-registry.md`。
 
-若用户请求已指定某个业务模块，再读取对应 对应 skill 的 `SKILL.md` 和候选 focal agent 文件。
+若用户请求已指定某个业务模块，再读取对应 `modules/<module>/SKILL.md` 和候选 focal agent 文件。
 
 ## 3. 用户选择门槛
 
@@ -78,11 +78,11 @@ Team 规模表示同一 subagent 的辩论席位数量，不表示不同 subagen
 2. 用简短中文说明可选配置方式。
 3. 不修改用户的 shell 配置或 `~/.claude.json`。
 4. 回退到 `master/agent-orchestration.md` 的普通 subagent/顺序复核。
-5. 在 `project_memory` 与过程日志中记录回退原因；Claude Code 可写入项目级 `CLAUDE.md`，OpenCode/Codex 缺少宿主规则文件时写入 `paper-workspace/_index/project-rules.md`。
+5. 在 `project_memory` 与过程日志中记录回退原因；Claude Code 可写入项目级 `CLAUDE.md`，ZCode 写入工作区 `AGENTS.md` 标记块，OpenCode/Codex 缺少宿主规则文件时写入 `paper-workspace/_index/project-rules.md`。
 
 ## 5. Subagent 升格为 Teammate
 
-本技能不复制 `agents/*.md` 到 `.claude/agents/`。升格前必须先按 `references/agent-registry.md` 把用户选择、模块短名或 Team 路由矩阵中的 focal agent 规范化为 canonical agent name。创建 Team 时，所有 teammate 使用同一个 canonical agent name 和同一个 agent 文件作为角色协议，但必须分配不同辩论视角。
+本技能不复制 `modules/*/agents/*.md` 到 `.claude/agents/`。升格前必须先按 `references/agent-registry.md` 把用户选择、模块短名或 Team 路由矩阵中的 focal agent 规范化为 canonical agent name。创建 Team 时，所有 teammate 使用同一个 canonical agent name 和同一个 agent 文件作为角色协议，但必须分配不同辩论视角。
 
 标准辩论视角：
 
@@ -99,9 +99,9 @@ teammate 的创建说明必须包含：
 
 ```markdown
 你是 paper-master-4ss 的 teammate，focal canonical agent name 是 `<paper-module-agent-name>`，本席位辩论视角是 `<perspective>`。开始工作前先读取：
-- `agents/<agent-file>.md` 或 sibling skill 的对应 agent 文件
+- `modules/<module>/agents/<agent-file>.md`
 - `master/output-protocol.md`
-- 与本任务相关的 当前 skill 或 sibling skill 的 `references/`、`phases/`、`frame/`、`resources/`、`chapters/` 或 `scripts/`
+- 与本任务相关的 `modules/<module>/references/`、`phases/`、`frame/`、`resources/`、`chapters/` 或 `scripts/`
 
 你必须遵守该 agent 文件中的职责、参考库回查协议、审阅重点和输出格式，但只从本席位辩论视角给出判断。
 输出必须包含 `## 参考库回查`、`## 本席位判断`、`## 对其他可能立场的反驳或让步`、`## Lead 可采纳结论`。

@@ -1,5 +1,7 @@
 # Phase 02: STORM 模式 — 跨学科头脑风暴
 
+> **取向覆盖条款（优先于本文件其余默认项）**：已确认研究取向；“尚未确定”不输出正式 Top 10。候选问题除原有六种策略外，按需加入概念重构、规范悖论、理论谱系重读、文本/语境冲突。每项按其适用取向评价：实证才要求变量、数据和识别；概念/解释理论评价概念增益、解释力和竞争理论；规范理论评价标准、原则冲突与反例；阐释评价文本边界、语境和竞争诠释；混合评价主次关系与互证。原文“五个 Agent”改为风险驱动的最少必要角色；评分卡、分歧、FATAL FLAW 和精炼机制保留，但不得以固定人数或理论/实证标签触发派发。
+
 ## 触发条件
 
 - 用户经模式确认后选择 `storm` 模式
@@ -37,7 +39,7 @@ python3 scripts/frame_locator.py --topic "[研究主题]" --keywords "[AI提取�
 - 每个理论的核心主张、机制链条、实证证据强度、理论地位
 - 标注理论之间的"竞争/替代/互补"关系
 
-**加载策略**: 先用 AI 提取关键词，再用 `frame_locator.py --keywords` 记录候选 frame、相关度分数、命中词和建议精读行号区间；随后按 `read_ranges[].start` 与 `read_ranges[].end` 执行 `sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md`，每个候选学科至少读取 Top 3 个区间。只有在跨学科概念、机制或竞争理论证据不足时，才扩展相邻行号区间。脚本只做初步定位，不替代跨学科交叉扫描和五顾问评估。
+**加载策略**: 先用 AI 提取关键词，再用 `frame_locator.py --keywords` 记录候选 frame、相关度分数、命中词和建议精读行号区间；随后按 `read_ranges[].start` 与 `read_ranges[].end` 执行 `sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md`，每个候选学科至少读取 Top 3 个区间。只有在跨学科概念、机制或竞争理论证据不足时，才扩展相邻行号区间。脚本只做初步定位，不替代跨学科交叉扫描和风险驱动复核。
 
 ### Step 2: 跨学科交叉扫描 (Cross-Frame Scanning)
 
@@ -268,7 +270,7 @@ W (调节变量): [如有]
 
 按 `master/agent-orchestration.md` 创建或复用 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/agent-brief.md`；五个 Agent 原始意见分别落盘，并把评分卡、共识、分歧、采纳决策和 FATAL FLAW 处理写入 `agent-synthesis-design-[YYYY-MM-DD].md`。
 
-派发 5 个 Agent 进行并行评估:
+以下五类角色是可选评估视角；依据当前风险选择零个、一个或多个角色，而非固定派发五人：
 
 | Agent | 角色 | 评估角度 | 权重 | 评分维度 |
 |-------|------|---------|------|---------|
@@ -317,7 +319,7 @@ Agent 子进程无法直接访问本 skill 的 `frame/`、`references/` 目录�
 
 #### Agent 并行派发
 
-使用 Agent 工具并行派发 5 个 Agent:
+仅当高风险、跨学科或投稿级设计需要多角色复核时，使用 Agent 工具并行派发所选角色：
 
 ```
 Agent 1 (理论家):    "评估以下 15-20 个 RQ 的理论创新性和嫁接合理性..."

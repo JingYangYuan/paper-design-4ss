@@ -30,44 +30,42 @@ python3 scripts/frame_locator.py --help
 
 ### 2.2 lit 模块
 
-**路径**: `../paper-lit-4ss/`
+**路径**: `paper-master-4ss/modules/lit/`
 
-**详细安装说明**: `../paper-lit-4ss/references/install-dependencies.md`
+**详细安装说明**: `paper-master-4ss/modules/lit/references/install-dependencies.md`
 
 **依赖**:
 
 | 依赖 | 用途 | 强制 |
 |------|------|------|
-| Chrome MCP (`chrome-devtools-mcp`) | CNKI / Google Scholar 网页操纵 | 是 |
-| Google Chrome（可见桌面窗口） | CNKI 检索、验证码处理 | 是 |
+| ZCode 内置浏览器控制（browser-use） | CNKI 网页操纵（kns8s 专业检索） | 是 |
+| ZCode 桌面版（浏览器面板可见） | CNKI 登录、验证码人工完成 | 是 |
 | Zotero Desktop + Connector | 本地文献库保存与去重 | 否 |
-| Zotero MCP | 代理直接搜索 Zotero、读取全文 | 否 |
+| Zotero MCP（推荐 `zotero-local-mcp`） | 代理检索本地库、写入题录/摘要、读取附件全文 | 否 |
 
 **快速检查**:
-```bash
-npx -y chrome-devtools-mcp@latest --help >/dev/null
-```
+浏览器控制为 ZCode 内置能力，无需安装；CNKI 阶段开始前按 `paper-master-4ss/modules/lit/references/cnki-kns8s-closed-loop.md` 的 Step 6.0 做可用性检查（列标签页/新建标签页/导航 + 读取轻量页面状态）。
 
 ---
 
 ### 2.3 outline 模块
 
-**路径**: `../paper-outline-4ss/`
+**路径**: `paper-master-4ss/modules/outline/`
 
 **依赖**: 无外部依赖。纯 Markdown 处理，不包含脚本或运行时。
 
 **验收**:
 ```bash
-test -f ../paper-outline-4ss/SKILL.md
-test -f ../paper-outline-4ss/references/outline-patterns.md
-test -f ../paper-outline-4ss/references/output-formats.md
+test -f paper-master-4ss/modules/outline/SKILL.md
+test -f paper-master-4ss/modules/outline/references/outline-patterns.md
+test -f paper-master-4ss/modules/outline/references/output-formats.md
 ```
 
 ---
 
 ### 2.4 analysis 模块
 
-**路径**: `../paper-analysis-4ss/`
+**路径**: `paper-master-4ss/modules/analysis/`
 
 **三语言模板各自依赖，按用户所选语言按需安装：**
 
@@ -123,15 +121,15 @@ ssc install ivreg2
 
 | 语言 | 文档 |
 |------|------|
-| Python | `../paper-analysis-4ss/references/python-ecosystem-setup.md` |
-| R | `../paper-analysis-4ss/references/r-ecosystem-setup.md` |
-| Stata | `../paper-analysis-4ss/references/stata-ecosystem-setup.md` |
+| Python | `paper-master-4ss/modules/analysis/references/python-ecosystem-setup.md` |
+| R | `paper-master-4ss/modules/analysis/references/r-ecosystem-setup.md` |
+| Stata | `paper-master-4ss/modules/analysis/references/stata-ecosystem-setup.md` |
 
 ---
 
 ### 2.5 write 模块
 
-**路径**: `../paper-write-4ss/`
+**路径**: `paper-master-4ss/modules/write/`
 
 **依赖**: 无外部依赖。以下四个脚本均仅使用 Python 3 标准库：
 
@@ -144,19 +142,19 @@ ssc install ivreg2
 
 **验收**:
 ```bash
-python3 ../paper-write-4ss/scripts/complexity_analyzer.py --help
-python3 ../paper-write-4ss/scripts/writing_scanner.py --help
-python3 ../paper-write-4ss/scripts/method_router.py --help
-python3 ../paper-write-4ss/scripts/example_extractor.py --help
+python3 paper-master-4ss/modules/write/scripts/complexity_analyzer.py --help
+python3 paper-master-4ss/modules/write/scripts/writing_scanner.py --help
+python3 paper-master-4ss/modules/write/scripts/method_router.py --help
+python3 paper-master-4ss/modules/write/scripts/example_extractor.py --help
 ```
 
 ---
 
 ### 2.6 submission 模块
 
-**路径**: `../paper-submission-4ss/`
+**路径**: `paper-master-4ss/modules/submission/`
 
-**详细安装说明**: `../paper-submission-4ss/references/install-dependencies.md`
+**详细安装说明**: `paper-master-4ss/modules/submission/references/install-dependencies.md`
 
 **依赖**:
 
@@ -175,23 +173,23 @@ python3 -m pip install --user python-docx lxml
 
 **验收**:
 ```bash
-python3 ../paper-submission-4ss/scripts/export_docx.py --help
-python3 ../paper-submission-4ss/scripts/check_docx_format.py --help
-python3 ../paper-submission-4ss/scripts/sanitize_reference_docx.py --help
-python3 ../paper-submission-4ss/scripts/check_citations.py --help
+python3 paper-master-4ss/modules/submission/scripts/export_docx.py --help
+python3 paper-master-4ss/modules/submission/scripts/check_docx_format.py --help
+python3 paper-master-4ss/modules/submission/scripts/sanitize_reference_docx.py --help
+python3 paper-master-4ss/modules/submission/scripts/check_citations.py --help
 ```
 
 ---
 
 ### 2.7 update 模块
 
-**路径**: `../paper-update-4ss/`
+**路径**: `paper-master-4ss/modules/update/`
 
 **依赖**: 无外部依赖。纯 agent 派发，不包含脚本或运行时。
 
 **验收**:
 ```bash
-test -f ../paper-update-4ss/SKILL.md
+test -f paper-master-4ss/modules/update/SKILL.md
 ```
 
 ---
@@ -201,7 +199,7 @@ test -f ../paper-update-4ss/SKILL.md
 ```bash
 #!/bin/bash
 # paper-master-4ss 全模块依赖验收
-# 从 paper-design-4ss/ 根目录执行
+# 从 paper-master-4ss/ 根目录执行
 
 SKILL_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$SKILL_ROOT"
@@ -219,12 +217,13 @@ python3 scripts/frame_locator.py --help >/dev/null 2>&1 && echo "OK" || echo "MI
 
 echo ""
 echo "=== lit ==="
-test -f ../paper-lit-4ss/SKILL.md && echo "lit/SKILL.md OK"
-npx -y chrome-devtools-mcp@latest --help >/dev/null 2>&1 && echo "Chrome MCP OK" || echo "Chrome MCP NOT FOUND"
+test -f paper-master-4ss/modules/lit/SKILL.md && echo "lit/SKILL.md OK"
+test -f paper-master-4ss/modules/lit/references/cnki-kns8s-closed-loop.md && echo "lit/闭环协议 OK"
+test -f paper-master-4ss/modules/lit/scripts/cnki/kns8s-download.sh && echo "lit/下载器 OK"
 
 echo ""
 echo "=== outline ==="
-test -f ../paper-outline-4ss/SKILL.md && echo "outline/SKILL.md OK"
+test -f paper-master-4ss/modules/outline/SKILL.md && echo "outline/SKILL.md OK"
 
 echo ""
 echo "=== analysis ==="
@@ -240,8 +239,8 @@ for pkg in ['numpy','pandas','scipy','statsmodels']:
 
 echo ""
 echo "=== write ==="
-python3 ../paper-write-4ss/scripts/complexity_analyzer.py --help >/dev/null 2>&1 && echo "complexity_analyzer OK"
-python3 ../paper-write-4ss/scripts/writing_scanner.py --help >/dev/null 2>&1 && echo "writing_scanner OK"
+python3 paper-master-4ss/modules/write/scripts/complexity_analyzer.py --help >/dev/null 2>&1 && echo "complexity_analyzer OK"
+python3 paper-master-4ss/modules/write/scripts/writing_scanner.py --help >/dev/null 2>&1 && echo "writing_scanner OK"
 
 echo ""
 echo "=== submission ==="
@@ -254,11 +253,11 @@ for pkg in ['docx','lxml']:
     except ImportError:
         print(f'{pkg} MISSING')
 " || echo "submission/Python check failed"
-python3 ../paper-submission-4ss/scripts/export_docx.py --help >/dev/null 2>&1 && echo "export_docx OK"
+python3 paper-master-4ss/modules/submission/scripts/export_docx.py --help >/dev/null 2>&1 && echo "export_docx OK"
 
 echo ""
 echo "=== update ==="
-test -f ../paper-update-4ss/SKILL.md && echo "update/SKILL.md OK"
+test -f paper-master-4ss/modules/update/SKILL.md && echo "update/SKILL.md OK"
 
 echo ""
 echo "=== DONE ==="
@@ -268,11 +267,11 @@ echo "=== DONE ==="
 
 ## 四、模块级安装说明索引
 
-各模块如需更详细的安装指引（如 Chrome MCP 配置、Zotero MCP 环境变量、pandoc 模板调试），直接读取模块自己的安装文档：
+各模块如需更详细的安装指引（如浏览器控制可用性检查、Zotero MCP 环境变量、pandoc 模板调试），直接读取模块自己的安装文档：
 
 | 模块 | 详细安装说明 |
 |------|-------------|
-| lit | `../paper-lit-4ss/references/install-dependencies.md` |
-| submission | `../paper-submission-4ss/references/install-dependencies.md` |
+| lit | `paper-master-4ss/modules/lit/references/install-dependencies.md` |
+| submission | `paper-master-4ss/modules/submission/references/install-dependencies.md` |
 
 其余模块（design / outline / analysis / write / update）仅有本文档中的依赖声明，不设独立安装说明。

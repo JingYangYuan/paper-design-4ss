@@ -1,8 +1,10 @@
 # Phase 01: FRAME 模式 — 单学科理论框架探索
 
+> **取向覆盖条款（优先于本文件其余默认项）**：进入本 phase 前已确认 `research_orientation`；“尚未确定”只比较取向和材料要求，不生成正式报告。顾问按概念冲突、材料/方法可行性、领域定位或反例风险选择，记录“决策—风险—已选角色—预期产物—未选理由”，不固定派发三人。实证路径保留可操作化和经验命题；概念/解释路径补概念账本、相邻概念、理论谱系和竞争框架；规范路径补评价对象、标准、原则冲突与反例；思想史/文本阐释路径补文本范围、版本、语境和竞争诠释；混合路径说明主次与材料分工。
+
 ## 顾问派发闸门
 
-理论框架候选形成后，必须派发 `agents/theory-consultant.md`、`agents/field-consultant.md` 与 `agents/critical-review-consultant.md`，复核理论适配、机制链条、学科位置和致命缺陷。意见写入 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/`，并更新 `agent-synthesis-design-[YYYY-MM-DD].md` 后再输出 FRAME 报告。
+理论框架候选形成后，仅在理论适配、概念边界、领域位置或致命反例存在实质风险时，选择最少必要角色复核。意见写入 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/`，并记录选择与未选择理由；轻量任务可记录 `agent-skip` 后直接输出 FRAME 报告。
 
 ## 触发条件
 

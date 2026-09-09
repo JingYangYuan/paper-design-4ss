@@ -25,12 +25,13 @@ _FRAME_META: dict[str, str] = {
     "education": "教育学",
     "political-science": "政治学",
     "international-politics": "国际政治",
+    "contemporary-china": "当代中国研究",
     "philosophy": "哲学",
     "methodology": "方法论",
     "marxism": "马克思主义",
     "party-history": "党史党建",
     "law": "法学",
-    "xijinping": "新时代思想",
+    "xinsixiang": "新时代思想",
 }
 
 

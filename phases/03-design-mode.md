@@ -1,8 +1,10 @@
 # Phase 03: DESIGN 模式 — 理论 → 研究设计蓝图
 
+> **取向覆盖条款（优先于本文件其余默认项）**：锚点确认卡先写研究取向、核心问题或中心论题、材料、竞争立场和不可声称内容；直接进入 DESIGN 缺锚点或材料时询问是否补跑 FRAME/STORM。实证路径沿用变量、识别、功效和稳健性；概念/解释路径使用概念账本、理论整合与 Toulmin 链；规范路径使用事实/价值/可行性前提、标准、原则冲突、反例和制度含义；阐释路径使用文本/档案范围、版本、语境、阅读规则、谱系与竞争诠释；混合路径说明理论与经验问题、互证、顺序及不可替代证据。顾问由具体风险选择。`design-report` 首部必须写 `research_orientation` 与 `analysis_required: true|false`（混合另写主/次路径及关系）；未选实证路径不要求变量、功效、模型或 PAP。
+
 ## 顾问派发闸门
 
-研究设计蓝图初稿形成后，必须并行派发 `agents/method-consultant.md`、`agents/journal-fit-consultant.md` 与 `agents/critical-review-consultant.md`，复核可检验性、操作化、识别路径、目标期刊适配、替代解释和不可执行环节。意见必须进入 `agent-synthesis-design-[YYYY-MM-DD].md` 后再定稿。
+研究设计蓝图初稿形成后，按材料/方法、期刊、概念、规范、文本、反例或交接风险选择最少必要顾问复核。意见进入 `agent-synthesis-design-[YYYY-MM-DD].md`；无实质风险时记录 `agent-skip`，不因取向或固定人数强制派发。
 
 **派发前主流程必做：参考库内容预注入。** Agent 子进程无法直接访问本 skill 目录。派发每个 agent 前，主流程必须 Read 对应参考文件并将实际内容注入 agent prompt：
 
@@ -11,6 +13,8 @@
 | `method-consultant` | `references/method-router.md`（定量方法路由）+ `references/identification-strategies.md`（识别策略）+ `references/design-essence.md`（操作化、功效分析、稳健性方案） |
 | `journal-fit-consultant` | `phases/03-design-mode.md`（输出规范、报告结构）+ `master/output-protocol.md` |
 | `critical-review-consultant` | `phases/05-quality-gates.md`（L0-L4 门控定义）+ `references/design-essence.md`（理论-方法对齐七项检查） |
+| `theory-consultant` | `frame_locator.py --keywords` 输出 + 候选 `frame/theory-frameworks-*.md` 的 `read_ranges` 区间内容 |
+| `field-consultant` | 候选框架的学科位置与现实意义条目 + `references/theory-contribution-types.md` |
 
 注入格式：在 agent prompt 末尾追加 `## 参考库内容（主流程已预注入）` 段落。
 

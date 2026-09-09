@@ -11,9 +11,10 @@
 ## 2. 输出类型
 
 - 过程报告 Markdown：模块报告、流程日志、顾问意见、agent synthesis、证据表、缺口表、扫描报告和最终回复使用 Markdown 标题、列表、表格、引用和 fenced code block。
-- 论文正文净稿：`paper-workspace/05-writing/manuscript*.md` 与 `paper-workspace/05-writing/revisions/styled*.md` 的正文区只允许 `#`、`##`、`###`、`####` 标题层级和自然段。
+- 论文正文净稿：`paper-workspace/05-writing/manuscript*.md`、`paper-workspace/05-writing/revisions/styled*.md` 与 `paper-workspace/05-writing/literature-review.md` 的正文区只允许 `#`、`##`、`###`、`####` 标题层级和自然段。
 - 正文净稿禁止出现 Markdown 装饰和过程痕迹：`**加粗**`、任务包、使用材料清单、未使用材料、待补证据、不可声称内容、Markdown 表格、引用块、代码块、HTML 注释、Mermaid 图示、任务清单和项目符号清单。
 - 正文净稿可保留 `.md` 扩展名，作为 submission 模块导出 Word 的输入；扩展名不代表可以把正文写成项目报告或笔记格式。
+- 文献综述的搜索日志、地图、证据表、论证蓝图和缺口报告必须保留在 `paper-workspace/02-literature/`，不得并入 `literature-review.md`。
 - 禁止用纯文本框线或 ASCII 箭头图伪造结构图；机制、流程和链路必须使用 Mermaid。
 - 普通证据表、清单、模型结果、引用缺口、变量字典和质量检查矩阵继续使用 Markdown 表格。
 - 每个正式报告应在开头说明：任务目标、输入材料、输出路径、关键结论和限制。
@@ -77,4 +78,4 @@ flowchart LR
 - 推荐下一步：下一步先做什么，以及为什么现在做它。
 - 需要用户决定：只列真正会改变路径的选择；若无关键选择，说明可按推荐路径继续。
 
-若当前阶段不清，先根据 `_index/project-state.md`、`_index/handoff-status.md` 与已有产物推断最早阻断阶段，并在说明中标注依据。
+若当前阶段不清，先根据 `_index/project-state.md`、`_index/handoff-status.md`、`_index/quality-score.json` 与已有产物推断最早阻断阶段，并在说明中标注依据。
