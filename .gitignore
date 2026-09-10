@@ -1,22 +1,7 @@
-# macOS
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
-*.egg-info/
-
-# Workspace outputs
-paper-workspace/
+*.log
+.env
+.env.*
