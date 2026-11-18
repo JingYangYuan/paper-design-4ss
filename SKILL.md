@@ -2,205 +2,181 @@
 name: paper-design-4ss
 description: 社会科学论文设计路由系统。保留 FRAME、STORM、DESIGN、FULL 的拆分版操作流程；模式确认后强制确认研究取向，并在原流程内支持实证、概念/解释理论、规范理论、思想史/文本阐释与混合设计。
 capabilities: read_file, run_shell, write_file, web_search, web_fetch, spawn_agent, search_text, ask_user
-args_hint: "[frame|storm|design|full] [研究主题/关键词] [可选: 学科领域, 目标期刊, 数据来源] — e.g., 'storm 数字平台劳动治理' 或 'design 教育不平等 社会学 ASR' 或 'frame 公共管理 政策执行'"
-invocable: true
 ---
 
 > **拆分版路径约定**：本包由 `paper-master-4ss/scripts/export_standalone.py` 从 `paper-master-4ss/modules/design/` 自动导出，是可独立安装的运行版。包内相对路径（`agents/`、`phases/`、`references/`、`master/` 等）相对本包根目录解析；跨模块路径 `paper-master-4ss/modules/<x>/...` 相对同级安装的 `paper-master-4ss/` 总控包解析。请勿直接编辑本包：修改总控模块后重新导出。
 >
 > **宿主无关约定**：本包不预设宿主，也不在 frontmatter 声明 `tools`/`hooks`/`model` 等宿主专属键。启动时按 `references/runtime-adapter.md` §5 探测当前环境可用能力，再按通用能力名（`read_file`、`search_text`、`web_search`、`run_shell`、`spawn_agent` 等）执行；宿主样例见 `references/agent-software-adapters.md`（样例，非名单）。
 
-# Paper Design 4SS: 社会科学论文设计路由系统
+# Paper Design 4SS：社会科学论文设计路由系统
 
-## 拆分版覆盖规则
+> 参数提示：[frame|storm|design|full] [研究主题/关键词] [可选: 学科领域, 目标期刊, 数据来源] — 例如 `storm 数字平台劳动治理` 或 `design 教育不平等 社会学 ASR`
 
-执行本模块时，先读取 `references/researcher-agency-overlay.md`（研究者主导权覆盖规则），再读取本包根部的 `references/runtime-adapter.md` 与 `references/agent-software-adapters.md`。本文件是当前模块主干协议；若主干协议与 overlay 冲突，以 overlay 为准。默认不自动连续推进阶段、不自动派发 agent、不自动并行复核；外部检索、脚本执行、导出和会改变项目状态的写入均先呈现方案、风险和证据缺口，经研究者明确确认后执行。
+本模块负责将初步研究兴趣转化为可往下推进的研究设计方案（理论锚点、研究问题、论证路径、材料要求与方法可行性评估）。模块内置 14 个学科与领域的理论框架库及《当代中国》章节级框架，按任务需求将研究主题路由至对应框架库并交由各操作阶段执行。
 
+## 研究者主导权覆盖规则
 
-你是有14个学科/领域的理论框架体系（社会学、公共管理、心理学、传播学、经济学、教育学、政治学、哲学、方法论、马克思主义、法学、新时代思想、党史党建、国际政治）的资深社会科学方法论专家。你的职责是路由——将研究主题连接到对应的框架库，按模式分发到具体操作阶段。
+执行前先读取 `references/researcher-agency-overlay.md`（研究者主导权覆盖规则），再读取总控包根目录的 `references/runtime-adapter.md` 与 `references/agent-software-adapters.md`。
 
----
+当本文件默认流程与覆盖规则冲突时，以覆盖规则为准。未经研究者明确同意，不得自动连续推进多个阶段、自动派发顾问、自动启动并行复核，或擅自执行外部检索、脚本运行、文件导出与变更项目状态的写入操作；此类动作前须先列出方案、风险与证据缺口。
 
 ## 路径约定
 
-- 本文件中的相对路径默认相对于本 skill 根目录解析；常用子目录包括 `agents/...`、`phases/...`、`frame/...`、`references/...`。
+本文件中的相对路径默认相对于本模块根目录解析（独立导出包中即为包根目录）；在总控包中引用跨模块或总控协议时，使用 `master/...`、`references/...`、`modules/...`。
 
 ## 全局输出协议
 
-先读取并遵守 `master/output-protocol.md`。本模块所有报告、顾问意见、综合文件和最终回复默认使用中文 Markdown；理论机制、研究设计流程、跨学科理论嫁接、阶段门控和 agent 派发/综合链路必须使用 Mermaid 图示，并在图后附 2-4 条中文解释。
+先读取并遵守 `master/output-protocol.md`。本模块所有报告、顾问意见、综合文件与最终回复均使用中文 Markdown；理论机制、研究设计流程、跨学科理论嫁接、阶段门控与顾问派活链路须附 Mermaid 图及 2–4 条中文解释。
 
-## 零、多智能体并行触发
+## 零、顾问派发原则
 
-按当前任务的概念冲突、材料/方法可行性、领域定位、规范原则、文本语境、期刊限制、反例或交接风险选择最少必要顾问。不得因研究取向或模式标签自动派发固定名单；每次派发记录待解决决策、选择角色、预期产物和未派发理由。实际身份以 `references/agent-registry.md` 的 canonical agent name 为准。
+依据当前步骤的概念冲突、材料与方法可行性、领域定位、规范原则、文本语境、期刊限制、反例或交接风险，选派最少必要顾问，不得仅因研究取向或模式标签套用固定名单。每次派发须在 `agent-brief.md` 中写明待决问题、选派角色、预期产出及未选派其他角色的原因。
 
-| 触发场景 | 可派发 agent |
+| 待解决的决策风险 | 对应顾问文件 |
 |---|---|
-| 理论框架适配、机制链条、理论贡献 | `agents/theory-consultant.md` |
-| 可检验性、操作化、识别路径、资料可得性 | `agents/method-consultant.md` |
-| 学科位置、领域贡献、现实议题意义 | `agents/field-consultant.md` |
-| 目标期刊或论文类型适配 | `agents/journal-fit-consultant.md` |
-| 致命缺陷、弱论证、不可执行环节 | `agents/critical-review-consultant.md` |
-| 概念定义、边界案例和概念贡献 | `agents/concept-analysis-consultant.md` |
-| 规范前提、原则冲突和反例 | `agents/normative-argument-consultant.md` |
-| 文本语境、谱系和竞争诠释 | `agents/interpretive-history-consultant.md` |
-| 论证担保、限定语和最强反驳 | `agents/argument-stress-test-consultant.md` |
+| 理论框架定位不清、机制链条断裂或理论贡献不明确 | `agents/theory-consultant.md` |
+| 题目可检验性、概念操作化、因果识别路径或资料可得性存疑 | `agents/method-consultant.md` |
+| 领域定位不明、贡献可见度不足或期刊/论文类型适配风险 | `agents/positioning-consultant.md` |
+| 排查致命缺陷、最强反例与不可执行环节（持有阶段放行阻断权） | `agents/critical-review-consultant.md` |
 
-主流程负责综合顾问意见，形成理论锚点、研究问题、设计蓝图和质量门控结论。所有顾问意见写入 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/`，并生成 `agent-synthesis-design-[YYYY-MM-DD].md`。若当前环境不能真实并行，则按上表顺序完成角色复核，并记录 `sequential-review`。
+执行时以 `references/agent-registry.md` 中的标准名为准，主流程负责将顾问意见综合为理论锚点、研究问题、设计蓝图与交付前检查结论。
 
-**Agent 派发前的主流程预注入要求（关键）**
+顾问意见写入 `paper-workspace/_logs/agents/design-[YYYY-MM-DD]/`，并生成 `agent-synthesis-design-[YYYY-MM-DD].md`。运行环境不支持并行时按上表顺序复核并记录 `sequential-review`。派发前须按 `agents/_reference-base.md` B3 注入 B1 切片与附加参考内容，顾问意见开头须回填 `参考库回查:`（`base=design-2026.10.24` + `tier` + 判据条目号 + 缺口），注入方式见文末附录。
 
-Agent 子进程运行在独立沙箱中，**无法直接访问本 skill 的 `frame/`、`references/`、`phases/` 等目录**。派发任何 agent 前，主流程必须先 Read 该 agent 所需参考文件，将**实际内容**嵌入 agent prompt 中。只列出文件路径或行号范围是不够的。
+## 零之二、范式专属复核清单
 
-注入格式规范——在 agent prompt 末尾追加以下段落：
+以下四项为模块内置专项复核清单，不单独占用顾问编号。需要专项复核时，由主流程按本节逐项自检，或按 T2 增派一次 `paper-design-critical-review-consultant` 并将对应条目号写入判据行。
 
-```markdown
-## 参考库内容（主流程已预注入）
+### 概念（C11）
 
-### [文件1路径]
-[文件1的完整或关键内容摘要]
+适用：概念重构、理论整合类选题。核查核心概念是否自洽、可区分、能否处理边界案例，以及所提新概念是否真正提升解释或规范能力。判据来源：`references/argument-standards.md` §概念分析。输出：判断结论、概念冲突、边界案例、需修订定义、可保留贡献与风险。
 
-### [文件2路径]
-[文件2的完整或关键内容摘要]
-```
+### 规范（C12）
 
-每个 agent 类型的必注入参考文件清单：
+适用：价值标准、原则冲突、制度正当性类选题。核查事实/价值/可行性前提是否区分、竞争原则是否得到公平对待、反例与代价是否改变结论适用范围。判据来源：`references/argument-standards.md` §规范论证、§反驳策略。输出：判断结论、隐含前提、最强反例、回应建议、需保留代价与风险。
 
-| Agent | 必注入参考文件 |
-|-------|--------------|
-| `theory-consultant` | `frame/theory-frameworks-[学科].md`（frame_locator 命中的行号区间全文）+ `references/storm-patterns.md`（嫁接策略库部分）+ `references/design-essence.md`（理论定位部分） |
-| `method-consultant` | `references/method-router.md`（定量方法路由部分）+ `references/identification-strategies.md`（识别策略匹配部分）+ `references/design-essence.md`（操作化部分） |
-| `field-consultant` | `frame/theory-frameworks-[学科].md`（相关理论条目）+ `references/storm-patterns.md`（学科交叉部分） |
-| `journal-fit-consultant` | `phases/02-storm-mode.md` 或 `phases/03-design-mode.md`（输出规范部分）+ `master/output-protocol.md` |
-| `critical-review-consultant` | `references/storm-patterns.md`（FATAL FLAW 判定标准）+ `phases/05-quality-gates.md`（四层门控定义）+ `references/design-essence.md`（理论-方法对齐检查项） |
+### 阐释（C13）
 
-注入内容量控制：frame 文件按 frame_locator 返回的 `read_ranges` 行号区间注入（通常 50-150 行/区间）；references 文件注入核心条款部分（而非全文），控制在 200-400 行/agent。总注入量 ≤ 800 行/agent prompt。
+适用：思想史、文本阐释类选题。核查文本版本、历史语境、解释单位、时代错置风险与竞争诠释是否得到处理。判据来源：`references/argument-standards.md` §思想史与文本阐释方法、§理论谱系与竞争框架。输出：判断结论、语境缺口、竞争诠释、不可推广边界与补证建议。
 
-## 第一层: 问询用户层
+### 论证压力测试（Toulmin 四问）
 
-### 1.1 解析用户输入
-
-用户提供了: `$ARGUMENTS`
-
-从用户输入中提取:
-
-| 字段 | 提取规则 | 默认值 |
-|------|---------|--------|
-| **模式** | `frame` / `storm` / `design` / `full` 关键词匹配 | 必须询问确认 |
-| **研究主题** | 去除模式关键词后的主体文本 | 必需，缺失则进入 1.2 |
-| **学科领域** | `社会学`/`公共管理`/`心理学`/`传播学`/`经济学`/`教育学`/`政治学`/`哲学`/`马克思主义`/`法学`/`新时代思想`/`党史党建`/`国际政治` | 自动推断 |
-| **目标期刊** | ASR/AJS/Demography/NHB/Science Advances/NCS/管理世界/社会学研究 等 | 无 |
-| **数据来源** | CFPS/CGSS/CHARLS/CHFS/自采数据/无 | 无 |
-| **特殊约束** | 方法偏好、样本限制、时间线等 | 无 |
-
-### 1.2 信息完整性检查（使用 ask_user）
-
-解析完成后，按以下优先级使用 `ask_user` 工具向用户确认:
-
-结构化示例模块统一遵守 `references/user-question-examples.md`；本节只保留 design 模块的局部业务选项。
-
-**Step 1 — 强制询问（研究主题缺失时）**
-
-若研究主题缺失，立即调用 `ask_user`:
-
-```
-question: "请提供你的研究主题或感兴趣的研究方向。"
-header: "研究主题"
-options: []  (不设预设选项，用户自由输入)
-```
-
-**Step 2 — 自动推断确认（学科未指定时）**
-
-若用户未指定学科，先根据主题关键词自动推断（见第三层路由表），然后用 `ask_user` 确认:
-
-```
-question: "根据你的研究主题，推断学科领域为 [{推断学科}]。是否正确？是否需要加入其他学科视角？"
-header: "学科确认"
-options: [
-  {label: "确认，只用 {推断学科}", description: "仅加载该学科框架库"},
-  {label: "加入第二学科", description: "多学科交叉扫描"},
-  {label: "手动指定学科", description: "告诉你我想要的学科"}
-]
-```
-
-**Step 3 — 可选追问（提升输出质量）**
-
-以下字段缺失时，用 `ask_user` 追问以提升质量（非阻断）:
-
-| 缺失字段 | 影响 | 问题示例 |
-|---------|------|---------|
-| 目标期刊 | DESIGN 阶段风格调整 | "是否有目标投稿期刊？(如 ASR、管理世界 等)" |
-| 数据来源 | STORM 阶段可行性评估 | "是否有可用的数据来源？(CFPS/CGSS/CHARLS 等)" |
-| 方法偏好 | DESIGN 阶段范式选择 | "对研究方法有偏好吗？(定量/质性/混合)" |
-
-可选追问示例：
-
-```text
-question: "是否有目标期刊、数据来源或方法偏好？这些信息会影响理论框架筛选和研究设计可行性判断。"
-header: "设计约束"
-options: [
-  {label: "补充约束", description: "用户提供目标期刊、数据来源或方法偏好后再进入设计"},
-  {label: "暂不指定", description: "先按主题和学科默认路径推进，后续再校准"},
-  {label: "不确定，请推荐", description: "由 Skill 根据主题推断可行期刊、数据和方法组合"}
-]
-```
-
-### 1.3 模式确认（使用 ask_user）
-
-每次进入本模块都必须先使用 `ask_user` 确认用户需要 `FRAME`、`STORM`、`DESIGN` 还是 `FULL`。即使用户文本中出现模式关键词，也要把推断模式作为推荐项让用户确认；确认后把 `mode-lock` 写入 process log。未完成模式确认不得读取 phase 文件或输出设计结果。
-
-```
-question: "你目前处于研究的哪个阶段？希望我帮你做什么？"
-header: "选择模式"
-options: [
-  {label: "FRAME — 找理论锚点", description: "探索单学科的理论框架，定位你的研究可以锚定的理论视角"},
-  {label: "STORM — 跨学科选题", description: "多学科头脑风暴+理论嫁接，产出 Top 10 研究问题"},
-  {label: "DESIGN — 出研究方案", description: "从理论锚点出发，生成完整的研究设计蓝图"},
-  {label: "FULL — 全流程", description: "FRAME → STORM → DESIGN 一气呵成"}
-]
-```
-
-确认后严格执行对应 phase，不得无故跳跃。`FULL` 必须按 `FRAME → STORM → DESIGN` 顺序推进；`DESIGN` 若缺少理论锚点、候选 RQ 或研究问题，应先询问用户是否补跑 `FRAME`/`STORM`，不得直接生成蓝图。
-
-### 1.4 研究取向确认（强制）
-
-模式确认后、读取任何 phase 前必须使用 `ask_user` 确认研究取向。该选择只决定 phase 内启用的要求，不改变 FRAME/STORM/DESIGN/FULL 路由，也不自动决定顾问名单。
-
-```text
-question: "你的研究主要以哪种取向展开？"
-header: "研究取向"
-options: [
-  {label: "实证研究", description: "以数据、案例或材料检验经验问题、机制或关系"},
-  {label: "概念/解释理论", description: "以概念重构、理论整合或解释框架形成贡献"},
-  {label: "规范理论", description: "以价值标准、原则冲突和制度正当性完成论证"},
-  {label: "思想史/文本阐释", description: "以文本、历史语境、理论谱系或竞争诠释形成解释"},
-  {label: "理论—经验混合", description: "明确理论与经验各自解决的问题和互证方式"},
-  {label: "尚未确定", description: "只比较取向及所需材料，不生成正式设计"}
-]
-```
-
-混合取向必须追问主路径、次路径与互证方式；尚未确定时只输出候选取向、所需材料和待确认问题。把 `research_orientation`、`analysis_required` 和混合关系写入 process log 及最终 `design-report`/`full-report`。
+适用：任意取向的核心主张压力测试。逐项回答：担保（warrant）为何成立？限定语（qualifier）适用范围是什么？最强异议是什么及如何回应？缺失何种支撑（backing）？判据来源：`references/argument-standards.md` §Toulmin 论证框架、§反驳策略。输出：论证强度、断裂点、最强反驳、可接受限定、阻断项与修订顺序。
 
 ---
 
-## 第二层: 限制层
+## 第一层：问询用户层
 
-### 2.1 质量门控
+### 1.1 解析用户输入
 
-所有输出必须通过 phases/05-quality-gates.md 中定义的四层质量门控:
+从 `$ARGUMENTS` 提取以下字段：
 
-| 层级 | 门控 | 阻断规则 |
-|------|------|---------|
-| **L0 路由** | 学科匹配正确 + 模式与研究取向均已确认 | 未确认 → 只允许澄清 |
-| **L1 FRAME** | 理论定位充分 + 空白识别有据 | 候选理论 < 3 → 扩大搜索或切换学科 |
-| **L2 STORM** | 交叉扫描多学科 + FATAL FLAW 清理 | 未覆盖 2 学科或致命缺陷未清理 → 补充/修正 |
-| **L3 DESIGN** | 理论-方法对齐 + 稳健性充足 | 任何"不通过"项 → 修正后重检 |
-| **L4 整体** | 实质内容 + 逻辑自洽 + 可操作 + 完整 | 任一项不满足 → 返回修正 |
+| 字段 | 提取规则 | 默认值 |
+|---|---|---|
+| **模式** | 匹配 `frame` / `storm` / `design` / `full` | 须询问确认 |
+| **研究主题** | 去除模式关键词后的主体文本 | 必填；缺失则进入 1.2 |
+| **学科领域** | `社会学` / `公共管理` / `心理学` / `传播学` / `经济学` / `教育学` / `政治学` / `哲学` / `马克思主义` / `法学` / `新时代思想` / `党史党建` / `国际政治` | 自动推断后确认 |
+| **目标期刊** | 如 ASR / AJS / Demography / NHB / 管理世界 / 社会学研究 | 无 |
+| **数据来源** | 如 CFPS / CGSS / CHARLS / CHFS / 自采数据 / 无 | 无 |
+| **特殊约束** | 方法偏好、样本限制、时间线等 | 无 |
 
-### 2.2 输出规范
+### 1.2 信息完整性检查（使用 `ask_user`）
 
-所有输出遵守 `master/output-protocol.md`：报告使用中文 Markdown；FRAME/STORM/DESIGN/FULL 中的理论机制、理论嫁接、研究设计流程、质量门控和跨阶段链路必须包含 Mermaid 图示。
+提问格式统一遵守 `references/user-question-examples.md`。
 
+**Step 1 — 必填询问（研究主题缺失时）**
+
+```text
+question: "请提供你的研究主题或感兴趣的研究方向。"
+header: "研究主题"
+options: []
 ```
+
+**Step 2 — 学科推断确认（学科未指定时）**
+
+先依据主题关键词做初步学科推断，再向用户确认：
+
+```text
+question: "根据研究主题初步推断学科领域为 [{推断学科}]，是否确认或补充第二学科视角？"
+header: "学科确认"
+options: [
+  {label: "确认，只用 {推断学科}", description: "仅加载该学科理论框架库"},
+  {label: "加入第二学科", description: "开展多学科交叉扫描"},
+  {label: "手动指定学科", description: "由用户直接指定目标学科"}
+]
+```
+
+**Step 3 — 可选约束追问（非阻断）**
+
+目标期刊、数据来源或方法偏好缺失时，可在同一轮合并追问以提升设计精度：
+
+```text
+question: "是否有目标期刊、可用数据来源或研究方法偏好？"
+header: "设计约束"
+options: [
+  {label: "补充约束", description: "由用户提供目标期刊、数据来源或方法偏好后再设计"},
+  {label: "暂不指定", description: "先按主题和学科默认路径推进，后续可再调整"},
+  {label: "不确定，请推荐", description: "依据研究主题推荐匹配的期刊、数据与方法组合"}
+]
+```
+
+### 1.3 工作模式确认（强制前置）
+
+进入任何阶段操作前，须通过 `ask_user` 确认模式为 `FRAME`、`STORM`、`DESIGN` 或 `FULL`。即使用户输入包含模式词，仍须将推断模式列为首位推荐项请用户确认；确认后将 `mode-lock` 写入过程日志。未完成模式确认前，不得读取 `phases/` 文件或输出设计结论。
+
+```text
+question: "当前需要进入哪个研究设计模式？"
+header: "选择模式"
+options: [
+  {label: "FRAME — 理论锚定", description: "定位单学科理论框架，识别理论空白与问题方向"},
+  {label: "STORM — 跨学科选题", description: "开展多学科头脑风暴与理论嫁接，筛选 Top 10 研究问题"},
+  {label: "DESIGN — 研究设计蓝图", description: "从既定理论锚点出发，生成可执行的研究设计方案"},
+  {label: "FULL — 全流程", description: "按 FRAME -> STORM -> DESIGN 顺序完成全套设计"}
+]
+```
+
+确认后严格按对应 `phases/` 执行。`FULL` 须按 `FRAME -> STORM -> DESIGN` 顺序推进；选择 `DESIGN` 但缺少理论锚点或候选研究问题时，须先询问用户是否补跑 `FRAME` / `STORM`，不得无依据直接生成蓝图。
+
+### 1.4 研究取向确认（强制）
+
+模式确认后、读取任何 `phases/` 文件前，须确认研究取向。取向仅决定阶段内启用的论证与方法核查条目，不改变四模式路由，也不固定顾问名单。
+
+```text
+question: "本研究主要以哪种研究取向展开？"
+header: "研究取向"
+options: [
+  {label: "实证研究", description: "以定量数据、案例或经验材料检验关系或机制"},
+  {label: "概念/解释理论", description: "以概念重构、理论整合或解释框架形成贡献"},
+  {label: "规范理论", description: "以价值标准、原则冲突与制度正当性完成论证"},
+  {label: "思想史/文本阐释", description: "以文本版本、历史语境、谱系或竞争诠释形成解释"},
+  {label: "理论—经验混合", description: "同时明确理论部分与经验部分各自的论证问题及互证方式"},
+  {label: "尚未确定", description: "仅对比备选取向与所需材料，暂不生成正式设计"}
+]
+```
+
+选择混合取向时须追问主路径、次路径与互证方式；选择「尚未确定」时仅输出候选取向对比、材料门槛与待决问题。须将 `research_orientation`、`analysis_required` 与混合关系写入过程日志及最终 `design-report` / `full-report`。
+
+---
+
+## 第二层：质量门槛与输出约束
+
+### 2.1 四层交付检查
+
+所有产出须通过 `phases/05-quality-gates.md` 定义的检查门槛：
+
+| 层级 | 核查内容 | 阻断条件 |
+|---|---|---|
+| **L0 路由** | 学科匹配准确，模式与研究取向均已锁定 | 未完成确认时仅做澄清，不得输出设计 |
+| **L1 FRAME** | 理论定位充分，空白识别有据 | 候选理论少于 3 个时扩大检索或切换学科 |
+| **L2 STORM** | 跨学科扫描覆盖充分，已剔除 FATAL FLAW | 未覆盖至少 2 个学科或未清理致命缺陷时须补充修正 |
+| **L3 DESIGN** | 理论—方法对齐，稳健性与反驳回应充分 | 存在「不通过」项时须修正并重检 |
+| **L4 整体** | 实质内容完整、逻辑自洽、可操作 | 任一项不达标则返回修正 |
+
+### 2.2 输出路径与命名
+
+遵守 `master/output-protocol.md`（中文 Markdown，关键链路附 Mermaid 图）：
+
+```text
 paper-workspace/01-design/
 ├── frame-report-[discipline]-[slug]-[YYYY-MM-DD].md
 ├── storm-report-[slug]-[YYYY-MM-DD].md
@@ -213,102 +189,77 @@ paper-workspace/_logs/
 
 ### 2.3 边界约束
 
-**必须遵守**:
-- 理论嫁接必须有实质机制链条，禁止表面类比 ("A就像B" 模式)
-- 实证取向的 RQ 必须可操作化；概念、规范与阐释取向的中心论题必须可争辩、材料可追溯并能回应强反例或竞争诠释
-- 学科路由去重并限制: 最多 3 个学科，按相关度排序
-- 交叉扫描必须覆盖至少 2 个学科
-- FATAL FLAW RQ 必须移出 Top 10
+**强制要求**：
+- 理论嫁接须给出实质机制链条，禁止仅作表面类比（如「A 类似于 B」）；
+- 实证取向研究问题须具备可操作性；概念、规范与阐释取向核心论题须具可争辩性、材料可追溯性并能回应强反例或竞争诠释；
+- 学科路由去重后最多保留 3 个学科并按相关度排序；
+- 跨学科扫描至少覆盖 2 个学科；
+- 存在 FATAL FLAW 的研究问题须移出 Top 10。
 
-**不得越界**:
-- 本技能负责 **理论定位 + 选题生成**，不负责论文全文写作
-- 本技能负责 **研究设计蓝图**，不负责具体数据分析执行
-- 本技能负责 **路由 + 分发**，具体操作步骤在 phases/ 文件中
+**职责边界**：
+- 本模块仅输出理论定位、选题与研究设计蓝图，不撰写论文正文，也不执行具体数据分析脚本。
+- 具体阶段操作细节由 `phases/` 文件承载。
 
-### 2.4 初始化与日志
+### 2.4 目录初始化
 
 ```bash
 OUTPUT_ROOT="${OUTPUT_ROOT:-paper-workspace}"
-SKILL_DIR="${PAPER_MASTER_4SS_DIR:-paper-master-4ss}/."
 mkdir -p "${OUTPUT_ROOT}/01-design" "${OUTPUT_ROOT}/_logs"
 ```
 
-每次运行必须创建 process log (格式详见 phases/05-quality-gates.md)。
-
 ---
 
-## 第三层: 路由层
+## 第三层：路由与框架检索
 
-### 3.0 `web_search` 关键词发散 + Python frame 全文检索
+### 3.0 关键词发散与框架库全库检索
 
-模式确认和主题确认后，**必须使用 `web_search` 能力发散关键词**（`web_search` 缺失时按 `references/runtime-adapter.md` 记录能力缺失并请用户提供关键词或改用可用检索来源，不得跳过发散步骤）。关键词发散完成后，再交给 `frame_locator.py` 在全部 14 个 frame 文件中做全文检索排序。
+完成模式与主题确认后，先通过 `web_search` 发散学术关键词（缺失联网搜索能力时按 `references/runtime-adapter.md` 记录能力缺失并请用户提供关键词），再调用 `frame_locator.py` 在全部框架文件中检索排序。不得跳过关键词发散而直接用口语题目匹配框架。
 
-#### Step 3.0a: `web_search` 关键词发散
+#### Step 3.0a：联网检索关键词发散
 
-对研究主题执行至少 2 次搜索，从不同角度发散关键词（下面是**查询意图**，实际调用当前宿主的搜索工具，不要照抄为 shell 命令）：
+围绕研究主题执行至少 2 次不同角度的联网检索：
+- **学术概念视角**：`"[研究主题] 理论框架 社会学 概念"`
+- **跨学科视角**：`"[研究主题] 跨学科 研究 综述"`
+- **方法视角（可选）**：`"[研究主题] 实证研究 方法 因果"`
+
+从检索结果提炼 5–10 个候选词并筛选为 **3–8 个核心检索关键词**（优先学术概念词、覆盖 ≥2 个学科视角、包含机制或方法线索词、以空格分隔、不直接照搬完整题目）。每次搜索的检索式、候选词与最终筛选结果须写入过程日志。
+
+#### Step 3.0b：调用 `frame_locator.py` 检索框架库
+
+```bash
+python3 scripts/frame_locator.py --topic "[研究主题]" --keywords "[发散得到的关键词，空格分隔]"
+```
+
+检索策略：
+1. **首轮全库扫描**：默认不加 `--discipline`；若命中候选 ≥ 3 个且最高分 ≥ 10，可直接按 `read_ranges` 读取。
+2. **命中不足时**（候选 < 3 或最高分 < 10）：扩展同义词、英文对应词或机制词重新检索。
+3. **命中过多时**（候选 > 10 个文件）：追加 `--discipline "[学科key或中文名]"` 过滤，并在过程日志记录被排除学科及原因。
+4. **内容读取**：主流程须依据返回的 `read_ranges` 读取对应行号区间内容后，再注入顾问 prompt。
+
+脚本输出结果（发散关键词、候选框架、得分、命中词及 `read_ranges`）须写入过程日志或报告「路由依据」部分。
+
+### 3.1 框架阅读与学科冗余参考
 
 ```text
-# 搜索 1: 学术概念视角 — 该主题在社会科学中涉及哪些理论概念
-query: "[研究主题] 理论框架 社会学 概念"
-
-# 搜索 2: 交叉学科视角 — 该主题跨越了哪些学科边界
-query: "[研究主题] 跨学科 研究 综述"
-
-# 搜索 3（可选）: 方法视角 — 该主题的典型研究方法
-query: "[研究主题] 实证研究 方法 因果"
+研究主题 -> web_search 发散 3–8 个关键词 -> frame_locator.py 全库排序 -> 确定 Top 1–3 学科 -> 按 read_ranges 读取片段 -> 注入顾问 prompt -> 顾问复核
 ```
 
-从搜索结果中提取 5-10 个候选关键词，再筛选精简为 **3-8 个最终检索关键词**。筛选标准：
-- 优先选学术概念词而非日常用语（如”社会分层”优于”贫富差距”）
-- 覆盖至少 2 个学科视角以扩大 frame 命中范围
-- 包含机制词和方法线索词
-- 关键词用空格分隔，支持中英文混合
-- 不得直接把完整研究题目原样当作唯一关键词
-
-**发散结果必须写入 process log**，记录：每次 `web_search` 的 query、提取的候选词、最终筛选结果及筛选理由。
-
-#### Step 3.0b: Python frame 全文检索
-
-将 `web_search` 发散得到的关键词交给 `frame_locator.py`，在全部 14 个 frame 文件中做全文检索排序：
-
-```bash
-python3 scripts/frame_locator.py --topic “[研究主题]” --keywords “[web_search发散的关键词，用空格分隔]”
-```
-
-若用户指定学科，可追加（但**推荐先不加 discipline 做全库扫描**，仅在全库命中过多时才用 discipline 过滤）：
-
-```bash
-python3 scripts/frame_locator.py --topic “[研究主题]” --keywords “[web_search发散的关键词]” --discipline “[学科key或中文名]”
-```
-
-**搜索策略建议**：
-1. **首轮必做**：不加 `--discipline` 全库扫描。若候选 frame ≥ 3 且最高分 ≥ 10，可直接进入 read_ranges。
-2. **分数过低时**（候选 < 3 或最高分 < 10）：重新 `web_search` 扩展关键词（加入同义词/英文对应词/机制词），再次全库扫描。
-3. **命中过多时**（候选 > 10 个 frame 文件）：用 `--discipline` 限定学科。此时应在 process log 中记录被排除的学科及原因。
-4. **不论分数高低，脚本返回的 read_ranges 必须由主流程 Read 后得到实际内容，再注入到 agent prompt 中。**
-
-脚本输出必须写入 process log 或设计报告的”路由依据”部分，至少保留 `web_search` 发散关键词、候选 frame、相关度分数、命中词、建议精读行号区间和不确定性提示。该脚本只做初步定位；最终框架选择必须先按脚本给出的 `read_ranges` 行号区间读取候选 frame 内容，再由 design agents 复核。
-
-### 3.1 全文检索路由
-
-```
-研究主题 → web_search 发散 3-8 个关键词 → `frame_locator.py --keywords` 全文检索全部 14 个 frame/ → 候选 frame + read_ranges 排序 → 主流程确认 Top 1-3 学科 → 按行号读取相关区间 → 内容注入 agent prompt → design agents 复核
-```
-
-读取 frame 时必须使用脚本返回的行号区间作为第一阅读入口，例如：
+按行号区间读取框架文件片段示例：
 
 ```bash
 sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md
 ```
 
-只有当行号区间不足以解释理论边界、竞争理论或未解决问题时，才扩展阅读相邻区间或读取更多标题段落；不得在未运行 `web_search` 发散和 Python 全文检索前直接整篇扫描 frame 文件。
+仅当指定行号区间不足以判断理论边界或竞争理论时再扩展阅读相邻段落；不得未先执行检索即通篇读取全库文件。
 
-**学科冗余度**: 公共管理—政治学 (高, 65%) 通常选其一；社会学—经济学 (低, 20%) 推荐组合；社会学—马克思主义 (中, 45%) 推荐组合；哲学—政治学 (高, 70%)；哲学—心理学 (中, 40%)；马克思主义—经济学 (高, 60%) 通常选其一；马克思主义—法学 (中, 50%) 推荐组合；法学—政治学 (高, 65%) 通常选其一；法学—哲学 (中, 45%)；新时代思想—马克思主义 (高, 70%) 推荐组合；新时代思想—公共管理 (中, 50%)；新时代思想—政治学 (高, 65%) 通常选其一；党史党建—马克思主义 (高, 70%) 推荐组合；党史党建—政治学 (高, 65%) 通常选其一；党史党建—新时代思想 (高, 75%) 推荐组合；国际政治—政治学 (高, 70%) 通常选其一；国际政治—经济学 (中, 40%) 推荐组合；国际政治—传播学 (中, 35%) 推荐组合；国际政治—法学 (中, 45%) 推荐组合；国际政治—社会学 (低, 25%) 推荐组合。
+**学科重叠参考**：
+- 高度重叠（通常选其一）：公共管理—政治学（65%）、哲学—政治学（70%）、马克思主义—经济学（60%）、法学—政治学（65%）、新时代思想—政治学（65%）、党史党建—政治学（65%）、国际政治—政治学（70%）。
+- 互补或常用组合：社会学—经济学（20%）、国际政治—社会学（25%）、国际政治—传播学（35%）、心理学—哲学（40%）、国际政治—经济学（40%）、社会学—马克思主义（45%）、法学—哲学（45%）、国际政治—法学（45%）、马克思主义—法学（50%）、新时代思想—公共管理（50%）、新时代思想—马克思主义（70%）、党史党建—马克思主义（70%）、党史党建—新时代思想（75%）。
 
-### 3.2 十五大框架库
+### 3.2 十五个框架库索引
 
-| 学科 | Frame 文件 | 理论条目 |
-|------|-----------|---------|
+| 学科 / 领域 | 框架文件 | 条目规模 |
+|---|---|---|
 | 社会学 | `frame/theory-frameworks-sociological.md` | 52 |
 | 公共管理 | `frame/theory-frameworks-public-admin.md` | 35+ |
 | 心理学 | `frame/theory-frameworks-psychology.md` | 25+ |
@@ -323,73 +274,63 @@ sed -n '[start],[end]p' frame/theory-frameworks-[discipline].md
 | 新时代思想 | `frame/theory-frameworks-xinsixiang.md` | 16 |
 | 党史党建 | `frame/theory-frameworks-party-history.md` | 18 |
 | 国际政治 | `frame/theory-frameworks-international-politics.md` | 30+ |
-| 当代中国研究 | `frame/theory-frameworks-contemporary-china.md` | 12 个知识点族 + 37 张原书理论卡 + 12 组机制展开（全书覆盖） |
+| 当代中国研究 | `frame/theory-frameworks-contemporary-china.md` | 12 个知识点族 + 37 张理论卡 + 12 组机制展开 |
 
-### 3.3 模式 → Phase 路由
+### 3.3 模式与阶段映射
 
-```
-路由结果 (模式 + 学科) → 加载对应 phases/ 文件执行
-```
+| 模式 | 对应阶段文件 | 执行内容 | 产出 |
+|---|---|---|---|
+| **FRAME** | `phases/01-frame-mode.md` | 单学科理论框架定位，按取向补充概念、谱系、规范或语境要求 | 理论定位报告 + 空白与张力清单 + RQ/论题方向 |
+| **STORM** | `phases/02-storm-mode.md` | 跨学科头脑风暴与理论嫁接，对比概念重构、规范冲突与谱系张力 | 理论嫁接地图 + Top 10 RQs/论题 + 评估卡 |
+| **DESIGN** | `phases/03-design-mode.md` | 理论锚点向研究设计转化（仅实证路径强制操作化、功效与稳健性） | 研究设计蓝图 + 论证/材料方案 |
+| **FULL** | `phases/04-full-pipeline.md` | 依次执行 FRAME -> STORM -> DESIGN，全程保持取向一致 | 完整研究设计方案 |
 
-| 模式 | Phase 文件 | 做什么 | 输出 |
-|------|-----------|--------|------|
-| **FRAME** | `phases/01-frame-mode.md` | 单学科理论框架探索；按取向补充概念、谱系、规范或文本语境要求 | 理论定位报告 + 空白/张力清单 + RQ/论题方向 |
-| **STORM** | `phases/02-storm-mode.md` | 跨学科头脑风暴；按取向比较概念重构、规范悖论、谱系重读与语境冲突 | 理论嫁接地图 + Top 10 RQs/论题 + 评估卡 |
-| **DESIGN** | `phases/03-design-mode.md` | 理论锚点→取向化研究设计；仅实证路径要求操作化、功效与稳健性 | 研究设计蓝图 + 取向化论证/材料方案 |
-| **FULL** | `phases/04-full-pipeline.md` | FRAME → STORM → DESIGN 串行，并全程携带研究取向 | 完整论文方案 |
+### 3.4 阶段文件执行要求
 
-**默认模式**: 无默认模式；必须先完成 1.3 的模式确认。
+确认模式与研究取向后，完整读取对应 `phases/` 文件，逐项执行并在过程日志记录完成状态。
 
-### 3.4 Phase 文件加载指令
+### 3.5 模块目录结构
 
-确定模式后，完整 Read 对应的 phase 文件，严格按其步骤执行。phase 文件是操作手册，不是参考——每一步都必须执行并在 process log 中记录。
+```text
 
-### 3.5 技能目录结构
-
-```
-design module/
-├── SKILL.md                         # 主技能 (本文件) — 问询层+限制层+路由层
-├── phases/                           # 操作步骤 — 按模式收纳
-│   ├── 01-frame-mode.md             # FRAME: 单学科理论框架探索
-│   ├── 02-storm-mode.md             # STORM: 跨学科头脑风暴
-│   ├── 03-design-mode.md            # DESIGN: 理论→研究设计蓝图
-│   ├── 04-full-pipeline.md          # FULL: 端到端全流程
-│   └── 05-quality-gates.md          # 质量门控 + 输出规范
-├── frame/                           # 十五大框架库（14个学科/领域 + 方法论）
-│   ├── theory-frameworks-sociological.md
-│   ├── theory-frameworks-public-admin.md
-│   ├── theory-frameworks-psychology.md
-│   ├── theory-frameworks-communication.md
-│   ├── theory-frameworks-economics.md
-│   ├── theory-frameworks-education.md
-│   ├── theory-frameworks-political-science.md
-│   ├── theory-frameworks-philosophy.md
-│   ├── theory-frameworks-methodology.md
-│   ├── theory-frameworks-marxism.md
-│   ├── theory-frameworks-law.md
-│   ├── theory-frameworks-xinsixiang.md
-│   ├── theory-frameworks-party-history.md
-│   ├── theory-frameworks-international-politics.md
-│   └── theory-frameworks-contemporary-china.md  # 《当代中国》章节级研究框架
-└── references/                           # 方法论参考
-    ├── design-essence.md                 # 研究设计决策树（理论→设计→对齐→输出）
-    ├── idea-essence.md                   # RQ 公式库与生成路径
-    ├── storm-patterns.md                 # 跨学科评估协议 + 嫁接策略库
-    ├── brainstorm-essence.md             # 跨学科头脑风暴变量体系
-    ├── method-router.md                  # 定量方法路由 + 诊断序列 + 报告规则 + 学科偏好
-    ├── regression-models.md              # OLS 回归与 Logistic 参考（含数学基础）
-    ├── panel-models.md                   # 面板因果模型族 + 纵贯研究设计
-    ├── factor-network-bootstrap.md       # 因子分析 + 社会网络 + Bootstrap
-    ├── identification-strategies.md      # 因果识别策略匹配 + 面板 FE/RE/GMM + 稳健性方案
-    └── qualitative-methods.md            # 质性设计家族 + 全流程模型 + 编码分析 + 质量逻辑 + 反身性伦理
-    ├── concept-analysis.md               # 概念定义、边界与概念贡献
-    ├── theory-genealogy.md               # 理论谱系与竞争框架
-    ├── toulmin-argumentation.md          # 主张、根据、担保、限定语与反驳
-    ├── normative-argumentation.md        # 规范前提、原则冲突与制度评价
-    ├── interpretive-methods.md           # 文本语境、谱系与竞争诠释
-    └── counterargument-strategies.md     # 强反例与回应策略
+├── SKILL.md
+├── phases/
+│   ├── 01-frame-mode.md
+│   ├── 02-storm-mode.md
+│   ├── 03-design-mode.md
+│   ├── 04-full-pipeline.md
+│   └── 05-quality-gates.md
+├── frame/
+│   └── theory-frameworks-*.md (15 files)
+└── references/
+    ├── design-essence.md
+    ├── idea-essence.md
+    ├── storm-patterns.md
+    ├── brainstorm-essence.md
+    ├── factor-network-bootstrap.md
+    ├── method-feasibility.md
+    ├── qualitative-methods.md
+    └── argument-standards.md
 ```
 
-### 3.6 输出与后续
+### 3.6 下游交接
 
-本技能输出理论锚点、Top 10 RQs/论题和研究设计蓝图。下游是否进入 analysis 仅由 DESIGN/FULL 报告中的 `analysis_required: true` 决定；其余路径先交接 lit、outline 与 write。
+本模块交付理论锚点、Top 10 RQ/论题及研究设计蓝图。下游是否进入 `analysis` 仅取决于 `DESIGN` / `FULL` 报告中的 `analysis_required: true`；其余路径按顺序交接 `lit`、`outline` 与 `write`。
+
+---
+
+## 附录：派发前内容注入格式（主流程参考）
+
+由于顾问子代理无法直接读取技能包内部的 `frame/`、`references/` 与 `phases/`，主流程派发前须先读取对应参考文件的实际内容并追加至顾问 prompt 末尾（仅附路径或行号区间不构成有效注入）：
+
+```markdown
+## 参考库内容（主流程已预注入）
+
+### [文件1路径]
+[文件1的关键或完整内容]
+
+### [文件2路径]
+[文件2的关键或完整内容]
+```
+
+各角色需注入的参考文件清单以 `agents/_reference-base.md` B3 为唯一来源。单次注入控制参考量：B1 切片 ≤ 1200 字；`frame/` 文件按 `read_ranges` 读取（通常每区间 50–150 行）；`references/` 注入核心条款（约 200–400 行）。
